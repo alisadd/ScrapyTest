@@ -54,7 +54,7 @@ COOKIES_ENABLED = False
 # See https://docs.scrapy.org/en/latest/topics/downloader-middleware.html
 #DOWNLOADER_MIDDLEWARES = {
 #    'versace_spider.middlewares.VersaceSpiderDownloaderMiddleware': 543,
-#    'scrapy.downloadermiddlewares.redirect.RedirectMiddleware': 600
+#    'scrapy.downloadermiddlewares.ajaxcrawl.AjaxCrawlMiddleware': 500
 #}
 
 # Enable or disable extensions

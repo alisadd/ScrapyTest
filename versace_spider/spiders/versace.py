@@ -54,8 +54,11 @@ class VersaceSpider(Spider):
         '''
         number_on_page = response.xpath('//span[@class="js-results-found-breadcrumb results-found-breadcrumb"]/text()').extract_first()
         number_on_page = re.findall(r'\d+', number_on_page)[0]
-        simple_page = response.request.url + f'?start=1&sz={number_on_page}&format=page-element' 
+        simple_page = response.request.url + '?start=0&sz=24&format=page-element'
         yield Request(simple_page, callback = self.parse_product_url)
+        if int(number_on_page) > 24:
+            second_page = response.request.url + '?start=25&sz=f{number_on_page}&format=page-element'
+            yield Request(second_page, callback = self.parse_product_url)
 
     def parse_product_url(self, response):
         '''
