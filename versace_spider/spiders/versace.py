@@ -21,24 +21,31 @@ class VersaceSpider(Spider):
         for item in women_category:
             women_category_url = item.xpath('@href').extract_first()
             women_category_url = response.urljoin(women_category_url)
-           # category_url = women_category_url.replace("international/en", self.region_code)
-           # yield Request(women_category_url, callback = self.parse_categories)
+            category_url = women_category_url.replace("international/en", self.region_code)
+            yield Request(women_category_url, callback = self.parse_categories)
         men_category = response.xpath('//li[a/@data-link_description="Men"]//li[@class="level-2-item js-expand-menu "]//a[@class="level-3-link category-link"]')
         for item in men_category:
             men_category_url = item.xpath('@href').extract_first()
             men_category_url = response.urljoin(men_category_url)
-           # yield Request(men_category_url, callback = self.parse_categories)
+            yield Request(men_category_url, callback = self.parse_categories)
         jeans_category = response.xpath('//li[a/@data-link_description="Jeans Couture"]//li[@class="level-2-item js-expand-menu "]//a[@class="level-3-link category-link"]')
         for item in jeans_category:
             jeans_category_url = item.xpath('@href').extract_first()
             jeans_category_url = response.urljoin(jeans_category_url)
-           # yield Request(jeans_category_url, callback = self.parse_categories)
+            yield Request(jeans_category_url, callback = self.parse_categories)
         children_panel = response.xpath('//li[contains(@class, "children-category")]')[0]
         children_category = children_panel.xpath('.//a[@class="level-2-link category-link"]')
         for item in children_category:
             children_category_url = item.xpath('@href').extract_first()
             children_category_url = response.urljoin(children_category_url)
             yield Request(children_category_url, callback = self.parse_categories)
+        home_category = response.xpath('//li[a/@data-link_description="Home Collection"]//a[@class="level-3-link category-link"]/@href').extract()
+        for item in home_category:
+            if item.startswith('https'):
+                pass
+            else:
+                home_url = response.urljoin(item)
+                yield Request(home_url, callback = self.parse_categories)
 
 
     def parse_categories(self, response):
