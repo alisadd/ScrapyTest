@@ -44,13 +44,6 @@ class VersaceSpider(Spider):
             if 'international' in children_category_url:
                 children_category_url = children_category_url.replace("international/en", 'us/en-us')
             yield Request(children_category_url, callback = self.parse_categories)
-
-#        for item in women_category, men_category, jeans_category, children_category:
-#            all_categories_url = item.xpath('@href').extract_first()
-#            all_categories_url = response.urljoin(all_categories_url)
-#            if 'international' in all_categories_url:
-#                all_categories_url = all_categories_url.replace("international/en", 'us/en-us')
-#            yield Request(all_categories_url, callback = self.parse_categories)
         home_category = response.xpath('//li[a/@data-link_description="Home Collection"]//a[@class="level-3-link category-link"]/@href').extract()
         for item in home_category:
             if item.startswith('https'):
@@ -74,7 +67,7 @@ class VersaceSpider(Spider):
             second_page = response.request.url + '?start=24&sz=f{number_on_page}&format=page-element'
             yield Request(second_page, callback = self.parse_product_url)
         elif int(number_on_page) > 48:
-            second_page = response.request.url + '?start=24&sz=47&format=page-element'
+            second_page = response.request.url + '?start=24&sz=48&format=page-element'
             yield Request(second_page, callback = self.parse_product_url)
             third_page = response.request.url + '?start=48&sz=f{number_on_page}&format=page-element'
             yield Request(third_page, callback = self.parse_product_url)
@@ -121,6 +114,8 @@ class VersaceSpider(Spider):
         sku = re.search('sku":\"(.*?)\"', attributes_block).group(1)
         availability = re.search('variantsavailable":(.*?)\,', attributes_block).group(1)
         hierarchy = re.search('category_hierarchy":\"(.*?)\"', attributes_block).group(1) 
+        if hierarchy == None:
+            hierarchy = url.split('/')[5:8]
 
 
         return {'product name': product_name,
