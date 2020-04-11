@@ -15,32 +15,28 @@ class VersaceSpider(Spider):
         '''
         Start crawler, define product categories & search for regional urls
         '''
-        women_category = response.xpath('//li[a/@data-link_description="Women"]//li[@class="level-2-item js-expand-menu "]//a[@class="level-3-link category-link"]')
+        women_category = response.xpath('//li[a/@data-link_description="Women"]//li[@class="level-2-item js-expand-menu "]//a[@class="level-3-link category-link"]/@href').extract()
         for item in women_category:
-            women_category_url = item.xpath('@href').extract_first()
-            women_category_url = response.urljoin(women_category_url)
+            women_category_url = response.urljoin(item)
             if 'international' in women_category_url:
                 women_category_url = women_category_url.replace("international/en", 'us/en-us')
             yield Request(women_category_url, callback = self.parse_categories)
-        men_category = response.xpath('//li[a/@data-link_description="Men"]//li[@class="level-2-item js-expand-menu "]//a[@class="level-3-link category-link"]')
+        men_category = response.xpath('//li[a/@data-link_description="Men"]//li[@class="level-2-item js-expand-menu "]//a[@class="level-3-link category-link"]/@href').extract()
         for item in men_category:
-            men_category_url = item.xpath('@href').extract_first()
-            men_category_url = response.urljoin(men_category_url)
+            men_category_url = response.urljoin(item)
             if 'international' in men_category_url:
                 men_category_url = men_category_url.replace("international/en", 'us/en-us')
             yield Request(men_category_url, callback = self.parse_categories)
-        jeans_category = response.xpath('//li[a/@data-link_description="Jeans Couture"]//li[@class="level-2-item js-expand-menu "]//a[@class="level-3-link category-link"]')
+        jeans_category = response.xpath('//li[a/@data-link_description="Jeans Couture"]//li[@class="level-2-item js-expand-menu "]//a[@class="level-3-link category-link"]/@href').extract()
         for item in jeans_category:
-            jeans_category_url = item.xpath('@href').extract_first()
-            jeans_category_url = response.urljoin(jeans_category_url)
+            jeans_category_url = response.urljoin(item)
             if 'international' in jeans_category_url:
                 jeans_category_url = jeans_category_url.replace("international/en", 'us/en-us')
             yield Request(jeans_category_url, callback = self.parse_categories)
         children_panel = response.xpath('//li[contains(@class, "children-category")]')[0]
-        children_category = children_panel.xpath('.//a[@class="level-2-link category-link"]')
+        children_category = children_panel.xpath('.//a[@class="level-2-link category-link"]/@href').extract()
         for item in children_category:
-            children_category_url = item.xpath('@href').extract_first()
-            children_category_url = response.urljoin(children_category_url)
+            children_category_url = response.urljoin(item)
             if 'international' in children_category_url:
                 children_category_url = children_category_url.replace("international/en", 'us/en-us')
             yield Request(children_category_url, callback = self.parse_categories)
